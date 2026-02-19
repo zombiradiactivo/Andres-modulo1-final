@@ -28,8 +28,8 @@ Este es un sistema de escritorio desarrollado en Python que permite gestionar el
 
 ## Estructura
     ├── src/
-    │   └── biblioteca.py     # Lógica de negocio y conexión a SQLite
-    ├── main_gui.py           # Interfaz gráfica (Tkinter)
+    │   ├── biblioteca.py     # Lógica de negocio y conexión a SQLite
+    │   └── main_gui.py       # Interfaz gráfica (Tkinter)
     ├── test_biblioteca.py    # Pruebas unitarias automáticas
     └── biblioteca.db         # Base de datos local (se genera al iniciar)
 
