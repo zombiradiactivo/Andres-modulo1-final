@@ -27,5 +27,11 @@ class TestBibliotecaAvanzada(unittest.TestCase):
         libro_despues = self.db.buscar_libro("555") # Vuelve a tener 2
         self.assertEqual(libro_despues[3], 2)
 
+    def test_eliminar_libro(self):
+        self.db.agregar_libro("999", "Para Borrar", "Autor")
+        self.db.eliminar_libro("999")
+        libro = self.db.buscar_libro("999")
+        self.assertIsNone(libro)
+
 if __name__ == '__main__':
     unittest.main()

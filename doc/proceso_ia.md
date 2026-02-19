@@ -29,3 +29,21 @@ Crea una interfaz sencilla con tk
 Promt 6
 
 biblioteca.py no tiene la funcion listar_libros
+
+Commit to Github
+
+Promt 7 
+
+La interfaz ahora funciona, pero sigue sin funcionar el unittest da este error, pero la tabla "libros" si existe el la db
+
+Promt 8 
+
+En la gui crea la opcion de poder cambiar el frame "añadir nuevo libro" para poder prestar los libros
+
+Promt 9
+
+Se puede añadir el poder copiar el texto de la tabla para no tener que escribir a mano el isbn
+
+Promt 10 
+
+Añade el boton de eliminar 

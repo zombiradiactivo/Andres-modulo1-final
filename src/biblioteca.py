@@ -3,16 +3,17 @@ import sqlite3
 class Libro:
     def __init__(self, db_name="biblioteca.db"):
         self.db_name = db_name
+        # Abrimos una conexión persistente para esta instancia
+        self.conn = sqlite3.connect(self.db_name)
         self._crear_tablas()
-
+        
     def _ejecutar_consulta(self, consulta, parametros=()):
-        # Usamos context managers para asegurar que la conexión se cierre
-        with sqlite3.connect(self.db_name) as conn:
-            cursor = conn.cursor()
-            cursor.execute(consulta, parametros)
-            conn.commit()
-            return cursor
-
+        # Ya no hacemos connect() aquí, usamos la persistente self.conn
+        cursor = self.conn.cursor()
+        cursor.execute(consulta, parametros)
+        self.conn.commit()
+        return cursor
+    
     def _crear_tablas(self):
         # Usamos múltiples ejecuciones para asegurar claridad
         consultas = [
@@ -47,6 +48,16 @@ class Libro:
             sql = "UPDATE libros SET copias_disponibles = copias_disponibles + ? WHERE isbn = ?"
             self._ejecutar_consulta(sql, (copias, isbn))
             return f"Se han añadido {copias} copias al libro con ISBN {isbn}."
+
+    def eliminar_libro(self, isbn):
+        # Opcional: Verificar si hay préstamos activos antes de borrar
+        prestamos = self._ejecutar_consulta("SELECT id FROM prestamos WHERE isbn = ?", (isbn,)).fetchone()
+        if prestamos:
+            return "Error: No se puede eliminar un libro que tiene préstamos activos."
+
+        sql = "DELETE FROM libros WHERE isbn = ?"
+        self._ejecutar_consulta(sql, (isbn,))
+        return f"Libro con ISBN {isbn} eliminado correctamente."
 
     def prestar_libro(self, isbn, id_usuario):
         libro = self.buscar_libro(isbn)
@@ -91,3 +102,8 @@ class Libro:
         sql = "SELECT isbn, titulo, autor, copias_disponibles FROM libros"
         cursor = self._ejecutar_consulta(sql)
         return cursor.fetchall()
+    
+    def __del__(self):
+        # Cerramos la conexión cuando el objeto sea destruido
+        if hasattr(self, 'conn'):
+            self.conn.close()
